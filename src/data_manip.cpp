@@ -15,10 +15,10 @@ namespace vzlearn
 		boost::numeric::ublas::vector <std::string> split_at_char(\
 				const std::string& line, char& c)
 		{
-			vector <string> separated_strings;
-			string s = "";
+			boost::numeric::ublas::vector <std::string> separated_strings;
+			std::string s = "";
 			int sz = (int)line.size();
-			bool just_inserteda;
+			bool just_inserted;
 			for(int i=0; i<sz; i++)
 			{
 				just_inserted = false;
@@ -33,7 +33,7 @@ namespace vzlearn
 			if(!just_inserted)
 			{
 				separated_strings.insert_element(
-						seperated_strings.size(), s);
+						separated_strings.size(), s);
 			}
 			return separated_strings;
 		}
