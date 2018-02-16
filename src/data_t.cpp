@@ -277,7 +277,7 @@ namespace vz_learn
 			};
 		}
 
-		bool data_t::operator==(data_t &class_obj)
+		bool data_t::operator==(const data_t &class_obj)
 		{
 			/*
 			 * Comparator Operator Overloading ==
@@ -313,7 +313,43 @@ namespace vz_learn
 			}
 		}
 
-		bool data_t::operator>(data_t &class_obj)
+		bool data_t::operator!=(const data_t &class_obj)
+		{
+			/*
+			 * Comparator Operator Overloading ==
+			 */
+			
+			if(this->data_type != class_obj.data_type)
+			{
+				return false;
+			}
+			switch(this->data_type)
+			{
+				case LL_T:
+				case DB_T:
+				{
+					return this->d != class_obj.d;
+				}
+				case ST_T:
+				{
+					return this->s != class_obj.s;
+				}
+				case CH_T:
+				{
+					return this->c != class_obj.c;
+				}
+				case VD_T:
+				{
+					return this->p !=  class_obj.p;
+				}
+				default:
+				{
+					return false;
+				}
+			}
+		}
+
+		bool data_t::operator>(const data_t &class_obj)
 		{
 			/*
 			 * Comparator Operator Overloading ==
@@ -349,7 +385,7 @@ namespace vz_learn
 			}
 		}
 
-		bool data_t::operator<(data_t &class_obj)
+		bool data_t::operator<(const data_t &class_obj)
 		{
 			/*
 			 * Comparator Operator Overloading ==
@@ -385,7 +421,7 @@ namespace vz_learn
 			}
 		}
 
-		bool data_t::operator<(data_t &class_obj)
+		bool data_t::operator>=(const data_t &class_obj)
 		{
 			/*
 			 * Comparator Operator Overloading ==
@@ -400,19 +436,56 @@ namespace vz_learn
 				case LL_T:
 				case DB_T:
 				{
-					return this->d < class_obj.d;
+					return this->d >= class_obj.d;
 				}
 				case ST_T:
 				{
-					return this->s < class_obj.s;
+					return this->s >= class_obj.s;
 				}
 				case CH_T:
 				{
-					return this->c < class_obj.c;
+					return this->c >= class_obj.c;
 				}
 				case VD_T:
 				{
-					return this->p < class_obj.p;
+					return this->p >= class_obj.p;
+				}
+				default:
+				{
+					return false;
+				}
+			}
+		}
+
+
+		bool data_t::operator<=(const data_t &class_obj)
+		{
+			/*
+			 * Comparator Operator Overloading ==
+			 */
+			
+			if(this->data_type != class_obj.data_type)
+			{
+				return false;
+			}
+			switch(this->data_type)
+			{
+				case LL_T:
+				case DB_T:
+				{
+					return this->d <= class_obj.d;
+				}
+				case ST_T:
+				{
+					return this->s <= class_obj.s;
+				}
+				case CH_T:
+				{
+					return this->c <= class_obj.c;
+				}
+				case VD_T:
+				{
+					return this->p <= class_obj.p;
 				}
 				default:
 				{
@@ -732,16 +805,289 @@ namespace vz_learn
 			return *this == data_t(x);
 		}
 
-		bool data_t::operator==(string &s)
+		bool data_t::operator==(std::string &s)
 		{
-			return *this == data_t(x);
+			return *this == data_t(s);
 		}
 
 		bool data_t::operator==(char *c_s)
 		{
-			return *this == data_t(x);
+			return *this == data_t(c_s);
 		}
 
+		bool data_t::operator!=(const int &x)
+		{
+			return *this != data_t(x);
+		}
+
+		bool data_t::operator!=(const short int &x)
+		{
+			return *this != data_t(x);
+		}
+
+		bool data_t::operator!=(const long int &x)
+		{
+			return *this != data_t(x);
+		}
+
+		bool data_t::operator!=(const long long int &x)
+		{
+			return *this != data_t(x);
+		}
+
+		bool data_t::operator!=(const unsigned long long int &x)
+		{
+			return *this != data_t(x);
+		}
+
+		bool data_t::operator!=(const unsigned long int &x)
+		{
+			return *this != data_t(x);
+		}
+
+		bool data_t::operator!=(const unsigned short int &x)
+		{
+			return *this != data_t(x);
+		}
+
+		bool data_t::operator!=(const unsigned int &x)
+		{
+			return *this != data_t(x);
+		}
+
+		bool data_t::operator!=(double &x)
+		{
+			return *this != data_t(x);
+		}
+
+		bool data_t::operator!=(std::string &s)
+		{
+			return *this != data_t(s);
+		}
+
+		bool data_t::operator!=(char *c_s)
+		{
+			return *this != data_t(c_s);
+		}
+
+		bool data_t::operator>(const int &x)
+		{
+			return *this > data_t(x);
+		}
+
+		bool data_t::operator>(const short int &x)
+		{
+			return *this > data_t(x);
+		}
+
+		bool data_t::operator>(const long int &x)
+		{
+			return *this > data_t(x);
+		}
+
+		bool data_t::operator>(const long long int &x)
+		{
+			return *this > data_t(x);
+		}
+
+		bool data_t::operator>(const unsigned long long int &x)
+		{
+			return *this > data_t(x);
+		}
+
+		bool data_t::operator>(const unsigned long int &x)
+		{
+			return *this > data_t(x);
+		}
+
+		bool data_t::operator>(const unsigned short int &x)
+		{
+			return *this > data_t(x);
+		}
+
+		bool data_t::operator>(const unsigned int &x)
+		{
+			return *this > data_t(x);
+		}
+
+		bool data_t::operator>(double &x)
+		{
+			return *this > data_t(x);
+		}
+
+		bool data_t::operator>(std::string &s)
+		{
+			return *this > data_t(s);
+		}
+
+		bool data_t::operator>(char *c_s)
+		{
+			return *this > data_t(c_s);
+		}
+
+		bool data_t::operator<(const int &x)
+		{
+			return *this < data_t(x);
+		}
+
+		bool data_t::operator<(const short int &x)
+		{
+			return *this < data_t(x);
+		}
+
+		bool data_t::operator<(const long int &x)
+		{
+			return *this < data_t(x);
+		}
+
+		bool data_t::operator<(const long long int &x)
+		{
+			return *this < data_t(x);
+		}
+
+		bool data_t::operator<(const unsigned long long int &x)
+		{
+			return *this < data_t(x);
+		}
+
+		bool data_t::operator<(const unsigned long int &x)
+		{
+			return *this < data_t(x);
+		}
+
+		bool data_t::operator<(const unsigned short int &x)
+		{
+			return *this < data_t(x);
+		}
+
+		bool data_t::operator<(const unsigned int &x)
+		{
+			return *this < data_t(x);
+		}
+
+		bool data_t::operator<(double &x)
+		{
+			return *this < data_t(x);
+		}
+
+		bool data_t::operator<(std::string &s)
+		{
+			return *this < data_t(s);
+		}
+
+		bool data_t::operator<(char *c_s)
+		{
+			return *this < data_t(c_s);
+		}
+
+		bool data_t::operator>=(const int &x)
+		{
+			return *this >= data_t(x);
+		}
+
+		bool data_t::operator>=(const short int &x)
+		{
+			return *this >= data_t(x);
+		}
+
+		bool data_t::operator>=(const long int &x)
+		{
+			return *this >= data_t(x);
+		}
+
+		bool data_t::operator>=(const long long int &x)
+		{
+			return *this >= data_t(x);
+		}
+
+		bool data_t::operator>=(const unsigned long long int &x)
+		{
+			return *this >= data_t(x);
+		}
+
+		bool data_t::operator>=(const unsigned long int &x)
+		{
+			return *this >= data_t(x);
+		}
+
+		bool data_t::operator>=(const unsigned short int &x)
+		{
+			return *this >= data_t(x);
+		}
+
+		bool data_t::operator>=(const unsigned int &x)
+		{
+			return *this >= data_t(x);
+		}
+
+		bool data_t::operator>=(double &x)
+		{
+			return *this >= data_t(x);
+		}
+
+		bool data_t::operator>=(std::string &s)
+		{
+			return *this >= data_t(s);
+		}
+
+		bool data_t::operator>=(char *c_s)
+		{
+			return *this >= data_t(c_s);
+		}
+		bool data_t::operator<=(const int &x)
+		{
+			return *this <= data_t(x);
+		}
+
+		bool data_t::operator<=(const short int &x)
+		{
+			return *this <= data_t(x);
+		}
+
+		bool data_t::operator<=(const long int &x)
+		{
+			return *this <= data_t(x);
+		}
+
+		bool data_t::operator<=(const long long int &x)
+		{
+			return *this <= data_t(x);
+		}
+
+		bool data_t::operator<=(const unsigned long long int &x)
+		{
+			return *this <= data_t(x);
+		}
+
+		bool data_t::operator<=(const unsigned long int &x)
+		{
+			return *this <= data_t(x);
+		}
+
+		bool data_t::operator<=(const unsigned short int &x)
+		{
+			return *this <= data_t(x);
+		}
+
+		bool data_t::operator<=(const unsigned int &x)
+		{
+			return *this <= data_t(x);
+		}
+
+		bool data_t::operator<=(double &x)
+		{
+			return *this <= data_t(x);
+		}
+
+		bool data_t::operator<=(std::string &s)
+		{
+			return *this <= data_t(s);
+		}
+
+		bool data_t::operator<=(char *c_s)
+		{
+			return *this <= data_t(c_s);
+		}
 	}
 }
 

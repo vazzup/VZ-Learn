@@ -68,8 +68,9 @@ namespace vz_learn
 			data_t operator*(const struct data_t& class_obj);
 			data_t operator/(const struct data_t& class_obj);
 			bool operator==(const struct data_t& class_obj);
-			bool operator<(const struct data_t& class_obj);
+			bool operator!=(const struct data_t& class_obj);
 			bool operator>(const struct data_t& class_obj);
+			bool operator<(const struct data_t& class_obj);
 			bool operator>=(const struct data_t& class_obj);
 			bool operator<=(const struct data_t& class_obj);
 
@@ -136,8 +137,8 @@ namespace vz_learn
 			data_t operator/(const unsigned int &x);
 			data_t operator/(const double &x);
 
-			// Special Comparators
-			bool operator==(const int &x)
+			// Special == Comparators
+			bool operator==(const int &x);
 			bool operator==(const short int &x);
 			bool operator==(const long int &x);
 			bool operator==(const long long int &x);
@@ -146,8 +147,73 @@ namespace vz_learn
 			bool operator==(const unsigned short int &x);
 			bool operator==(const unsigned int &x);
 			bool operator==(double &x);
-			bool operator==(string &s);
+			bool operator==(std::string &s);
 			bool operator==(char *c_s);
+
+			// Special != Comparators
+			bool operator!=(const int &x);
+			bool operator!=(const short int &x);
+			bool operator!=(const long int &x);
+			bool operator!=(const long long int &x);
+			bool operator!=(const unsigned long long int &x);
+			bool operator!=(const unsigned long int &x);
+			bool operator!=(const unsigned short int &x);
+			bool operator!=(const unsigned int &x);
+			bool operator!=(double &x);
+			bool operator!=(std::string &s);
+			bool operator!=(char *c_s);
+
+			// Special > Comparators
+			bool operator>(const int &x);
+			bool operator>(const short int &x);
+			bool operator>(const long int &x);
+			bool operator>(const long long int &x);
+			bool operator>(const unsigned long long int &x);
+			bool operator>(const unsigned long int &x);
+			bool operator>(const unsigned short int &x);
+			bool operator>(const unsigned int &x);
+			bool operator>(double &x);
+			bool operator>(std::string &s);
+			bool operator>(char *c_s);
+
+			// Special < Comparators
+			bool operator<(const int &x);
+			bool operator<(const short int &x);
+			bool operator<(const long int &x);
+			bool operator<(const long long int &x);
+			bool operator<(const unsigned long long int &x);
+			bool operator<(const unsigned long int &x);
+			bool operator<(const unsigned short int &x);
+			bool operator<(const unsigned int &x);
+			bool operator<(double &x);
+			bool operator<(std::string &s);
+			bool operator<(char *c_s);
+
+			// Special >= Comparators
+			bool operator>=(const int &x);
+			bool operator>=(const short int &x);
+			bool operator>=(const long int &x);
+			bool operator>=(const long long int &x);
+			bool operator>=(const unsigned long long int &x);
+			bool operator>=(const unsigned long int &x);
+			bool operator>=(const unsigned short int &x);
+			bool operator>=(const unsigned int &x);
+			bool operator>=(double &x);
+			bool operator>=(std::string &s);
+			bool operator>=(char *c_s);
+
+			// Special <= Comparators
+			bool operator<=(const int &x);
+			bool operator<=(const short int &x);
+			bool operator<=(const long int &x);
+			bool operator<=(const long long int &x);
+			bool operator<=(const unsigned long long int &x);
+			bool operator<=(const unsigned long int &x);
+			bool operator<=(const unsigned short int &x);
+			bool operator<=(const unsigned int &x);
+			bool operator<=(double &x);
+			bool operator<=(std::string &s);
+			bool operator<=(char *c_s);
 		};
 	}
 }

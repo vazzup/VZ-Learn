@@ -1,7 +1,7 @@
 CXXFLAGS=-std=c++14 -fpic -ggdb -Wall -Wextra
 BIN=../bin/
 INCLUDE=../include/
-LIBS=../libs
+LIBS=../libs/
 
 .PHONY: clean test all install
 
