@@ -7,10 +7,17 @@ Machine Learning and Data Preprocessing framework for C++
 3. GNU Make
 
 ## File Structure
-/\
-| _ _ _ _ _ _ _ _ _ _ _ _ _ \
-|      |        |     |    |\
-bin datasets include libs src \
+.\
++--bin\
+| +--_Executables_\
++--datasets\
+| +--_Datasets_\
++--include\
+| +--_Header Files_\
++--libs\
+| +--_Dynamic Libraries_\
++--src\
+| +--_Source Files_\
 
 ## Folder Description
 *bin:* Contains all executables (Test executables)\
