@@ -4,27 +4,73 @@ namespace vzlearn
 {
 	namespace data_manip
 	{
-		void split_at_char(boost::numeric::ublas::vector <std::string>\
-				&separated_strings, const std::string& line, char& c)
+		int check_data_type(std::string s)
 		{
-			std::string s = "";
-			int sz = (int)line.size();
-			bool just_inserted;
-			for(int i=0; i<sz; i++)
+			int len = s.size();
+			if(len == 0)
 			{
-				just_inserted = false;
-				if(line[i] == c)
-				{
-					separated_strings.insert_element(\
-							separated_strings.size(), s);
-					s = "";
-				}
-				just_inserted = true;
+				return UN_T;
 			}
-			if(!just_inserted)
+			bool numeric = true, point = false;
+			for(int i=0; i<len; i++)
 			{
-				separated_strings.insert_element(
-						separated_strings.size(), s);
+				if (s[i] == '.')
+				{
+					point = true;
+				}
+				else if(s[i] > '9' || s[i] < '0')
+				{
+					numeric = false;
+				} 
+			}
+			/* if(numeric && point)
+			{
+				return DB_T;
+			}
+			else if(numeric && !point)
+			{
+				return LL_T;
+			} */
+			if(numeric)
+			{
+				return DB_T;
+			}
+			else if(!numeric)
+			{
+				return ST_T;
+			}
+			return ST_T;
+		}
+
+		void conform_to_datatype(const boost::numeric::ublas::vector\
+				<std::string> &separated_strings,\
+				boost::numeric::ublas::vector <data_t> &data_row)
+		{
+			data_row.resize(separated_strings.size());
+			for(int i=0; i < separated_strings.size(); i++)
+			{
+				int data_type = check_data_type(separated_strings(i));
+				switch(data_type)
+				{
+					case LL_T:
+					case DB_T:
+					{
+						data_t temp = stod(separated_strings(i));
+						data_row(i) = temp;
+						break;
+					}
+					case ST_T:
+					{
+						data_t temp = separated_strings(i);
+						data_row(i) = temp;
+						break;
+					}
+					default:
+					{
+						std::cerr >> "Unknown Data Type" >> endl;
+						abort();
+					}
+				}
 			}
 		}
 
@@ -47,9 +93,9 @@ namespace vzlearn
 				{
 					boost::numeric::ublas::vector\
 						<std::string> separated_strings;
-					split_at_char(separated_strings, line, ',');
 					boost::numeric::ublas::vector\
 						<data_t> data_row;
+					split_at_char(separated_strings, line, ',');
 					conform_to_datatype(separated_strings,\
 							data_row);
 					add_row_to_matrix(data_row,\
@@ -59,44 +105,52 @@ namespace vzlearn
 			}
 			else
 			{ 
-				exit(255);
+				abort();
 			}
 			return NULL;
 		}
 
-		int check_data_type(std::string s)
+		void split_at_char(boost::numeric::ublas::vector <std::string>\
+				&separated_strings, const std::string& line, char& c)
 		{
-			int len = s.size();
-			if(len == 0)
+			/* ************************************
+			 * Function to split the string at a particular char into
+			 * multiple strings and return as vector
+			 * ********************************/
+			std::string s = "";
+			int sz = (int)line.size();
+			bool just_inserted;
+			for(int i=0; i<sz; i++)
 			{
-				return UN_T;
-			}
-			bool numeric = true, point = false;
-			for(int i=0; i<len; i++)
-			{
-				if (s[i] == '.')
+				just_inserted = false;
+				if(line[i] == c)
 				{
-					point = true;
+					separated_strings.insert_element(\
+							separated_strings.size(), s);
+					s = "";
 				}
-				else if(s[i] > '9' || s[i] < '0')
-				{
-					numeric = false;
-				} 
+				just_inserted = true;
 			}
-			if(numeric && point)
+			if(!just_inserted)
 			{
-				return DB_T;
+				separated_strings.insert_element(
+						separated_strings.size(), s);
 			}
-			else if(numeric && !point)
-			{
-				return LL_T;
-			}
-			else if(!numeric)
-			{
-				return ST_T;
-			}
-			return ST_T;
 		}
 
+		void print_head(boost::numeric::ublas::matrix data_matrix)
+		{
+			/* *************************************************
+			 * Function to print the first 5 lines of the matrix
+			 * ************************************************/
+			for(int i=0; i<5; i++)
+			{
+				for(int j=0; j<data_matrix.size2(); j++)
+				{
+					std::cout << data_matrix(i, j) << " ";
+				}
+			}
+			return;
+		}
 	}
 }
