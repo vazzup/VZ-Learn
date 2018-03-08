@@ -74,6 +74,68 @@ namespace vzlearn
 			}
 		}
 
+		void one_hot_encode(boost::numeric::ublas::matrix <data_t> &data_matrix,\
+				int column_no,\
+				int threshold=0)
+		{
+			int rows, columns;
+			rows = data_matrix.size1();
+			if(rows == 0) {
+				std::cerr >> "Matrix sent to OHE is empty\n";
+				return;
+			}
+			columns = data_matrix.size2();
+			switch(data_matrix(0, column_no).data_type)
+			{
+				case ST_T:
+				{
+					std::unordered_set <string> nominal_values;
+					std::unordered_map <string, int> column_mapping;
+					int ohe_column_no = column_no;
+					for(int i=0; i<rows; i++)
+					{
+						string nominal_value =\
+							data_matrix(i, column_no).s;
+						if(nominal_values\
+							.find(nominal_value)\
+							== nominal_values.end())
+						{
+							nominal_values.insert(nominal_value);
+							column_mapping[nominal_value] =\
+								ohe_column_no;
+							if(ohe_column_no == column_no)
+							{
+								ohe_column_no = columns;
+							}
+							else
+							{
+								ohe_column_no++;
+							}
+						}
+						data_matrix(i, column_no) = 0;
+					}
+					data_matrix.resize(rows,\
+						columns + nominal_values.size());
+					for(int i=0; i<rows; i++)
+					{
+						string nominal value=\
+							data_matrix(i, column_no).s;
+						for(int j=columns;\
+							j<columns+nominal_values.size(); j++)
+						{
+							data_matrix(i, j) = 0;
+						}
+						data_matrix(i, column_mapping[nominal_value]) = 1;
+					}
+				}
+				default:
+				{
+					std::cerr >> "Cannot One Hot Encode this Data Type\n";
+					abort();
+				}
+			}
+		}
+
 		void get_data_from_csv(boost::ublas::numeric::matrix <data_t> &data_matrix
 				const std::string& filepath,\
 				const bool& ignore_first_line\
