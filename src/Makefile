@@ -15,12 +15,12 @@ $(BIN)data_manip.o: data_manip.cpp $(INCLUDE)data_manip.hpp $(BIN)data_t.o
 	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) -c data_manip.cpp $(BIN)data_t.o -o $(BIN)data_manip.o
 
 $(LIBS)libdatamanip.so: $(BIN)data_manip.o
-	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) -shared $(BIN)data_manip.o -o $(LIBS)libdatamanip.so -ldata_t
+	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) -shared $(BIN)data_manip.o -o $(LIBS)libdatamanip.so 
 
 liblinearregression.so: linear_regression.cpp $(INCLUDE)linear_regression.hpp $(BIN)data_manip.so $(BIN)data_t.so
 	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) -shared linear_regression.cpp -o $(LIBS)liblinearregression.so -ldata_manip -ldata_t
 
-all: $(LIBS)libdatat.so
+all: $(LIBS)libdatat.so $(LIBS)libdatamanip.so
 
 clean:
 	rm -rf ../bin/*

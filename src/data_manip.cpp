@@ -1,10 +1,23 @@
 #include "data_manip.hpp"
 
-namespace vzlearn
+namespace vz_learn
 {
 	namespace data_manip
 	{
-		int check_data_type(std::string s)
+		void add_row_to_matrix(boost::numeric::ublas::vector <data_t>& data_row,
+				boost::numeric::ublas::matrix <data_t>& data_matrix,
+				int row_no)
+		{
+			int rows = data_matrix.size1();
+			int columns = data_row.size();
+			data_matrix.resize(rows + 1, columns);
+			for(int i=0; i<columns; i++)
+			{
+				data_matrix(rows, i) = data_row(i);
+			}
+		}
+
+		int check_data_type(std::string& s)
 		{
 			int len = s.size();
 			if(len == 0)
@@ -23,14 +36,6 @@ namespace vzlearn
 					numeric = false;
 				} 
 			}
-			/* if(numeric && point)
-			{
-				return DB_T;
-			}
-			else if(numeric && !point)
-			{
-				return LL_T;
-			} */
 			if(numeric)
 			{
 				return DB_T;
@@ -67,21 +72,56 @@ namespace vzlearn
 					}
 					default:
 					{
-						std::cerr >> "Unknown Data Type" >> endl;
+						std::cerr << "Unknown Data Type" << std::endl;
 						abort();
 					}
 				}
 			}
 		}
 
+		void get_data_from_csv(boost::numeric::ublas::matrix <data_t> &data_matrix,
+				const std::string& filepath,\
+				const bool& ignore_first_line\
+				)
+		{
+			int len = filepath.size();
+			assert(filepath[len-3] == 'c' &&\
+					filepath[len-2] == 's' &&\
+					filepath[len-1] == 'v');
+			std::ifstream infile;
+			infile.open(filepath);
+			if(infile.good())
+			{
+				std::string line;
+				int row_no = 0;
+				while(std::getline(infile, line))
+				{
+					boost::numeric::ublas::vector\
+						<std::string> separated_strings;
+					boost::numeric::ublas::vector\
+						<data_t> data_row;
+					split_at_char(separated_strings, line, ',');
+					conform_to_datatype(separated_strings,\
+							data_row);
+					add_row_to_matrix(data_row,\
+							data_matrix, row_no);
+					++row_no;
+				}
+			}
+			else
+			{ 
+				abort();
+			}
+		}
+
 		void one_hot_encode(boost::numeric::ublas::matrix <data_t> &data_matrix,\
 				int column_no,\
-				int threshold=0)
+				int threshold)
 		{
 			int rows, columns;
 			rows = data_matrix.size1();
 			if(rows == 0) {
-				std::cerr >> "Matrix sent to OHE is empty\n";
+				std::cerr << "Matrix sent to OHE is empty" << std::endl;
 				return;
 			}
 			columns = data_matrix.size2();
@@ -89,12 +129,12 @@ namespace vzlearn
 			{
 				case ST_T:
 				{
-					std::unordered_set <string> nominal_values;
-					std::unordered_map <string, int> column_mapping;
+					std::unordered_set <std::string> nominal_values;
+					std::unordered_map <std::string, int> column_mapping;
 					int ohe_column_no = column_no;
 					for(int i=0; i<rows; i++)
 					{
-						string nominal_value =\
+						std::string nominal_value =\
 							data_matrix(i, column_no).s;
 						if(nominal_values\
 							.find(nominal_value)\
@@ -118,7 +158,7 @@ namespace vzlearn
 						columns + nominal_values.size());
 					for(int i=0; i<rows; i++)
 					{
-						string nominal value=\
+						std::string nominal_value=\
 							data_matrix(i, column_no).s;
 						for(int j=columns;\
 							j<columns+nominal_values.size(); j++)
@@ -130,50 +170,15 @@ namespace vzlearn
 				}
 				default:
 				{
-					std::cerr >> "Cannot One Hot Encode this Data Type\n";
+					std::cerr << "Cannot One Hot Encode this Data Type"\
+						<< std::endl;
 					abort();
 				}
 			}
 		}
 
-		void get_data_from_csv(boost::ublas::numeric::matrix <data_t> &data_matrix
-				const std::string& filepath,\
-				const bool& ignore_first_line\
-				)
-		{
-			int len = filepath.size();
-			std::assert(filepath[len-3] == 'c' &&\
-					filepath[len-2] == 's' &&\
-					filepath[len-1] == 'v');
-			std::ifstream infile;
-			infile.open(filepath);
-			if(infile.good())
-			{
-				std::string line;
-				int row_no = 0;
-				while(std::getline(file, line))
-				{
-					boost::numeric::ublas::vector\
-						<std::string> separated_strings;
-					boost::numeric::ublas::vector\
-						<data_t> data_row;
-					split_at_char(separated_strings, line, ',');
-					conform_to_datatype(separated_strings,\
-							data_row);
-					add_row_to_matrix(data_row,\
-							data_matrix, row_no);
-					++row_no;
-				}
-			}
-			else
-			{ 
-				abort();
-			}
-			return NULL;
-		}
-
 		void split_at_char(boost::numeric::ublas::vector <std::string>\
-				&separated_strings, const std::string& line, char& c)
+				&separated_strings, const std::string& line, char c)
 		{
 			/* ************************************
 			 * Function to split the string at a particular char into
@@ -200,7 +205,7 @@ namespace vzlearn
 			}
 		}
 
-		void print_head(boost::numeric::ublas::matrix data_matrix)
+		void print_head(boost::numeric::ublas::matrix <data_t>& data_matrix)
 		{
 			/* *************************************************
 			 * Function to print the first 5 lines of the matrix
