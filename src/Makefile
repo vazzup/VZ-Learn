@@ -1,4 +1,4 @@
-CXXFLAGS=-std=c++14 -fpic -ggdb -Wall -Wextra
+CXXFLAGS=-std=c++17 -fpic -ggdb -Wall -Wextra
 BIN=../bin/
 INCLUDE=../include/
 LIBS=../libs/
@@ -30,5 +30,8 @@ test: all
 	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) data_t_test.cpp -o $(BIN)data_t_test -ldatat -Wl,-rpath,"\$$ORIGIN/../libs"
 	chmod +x $(BIN)data_t_test
 	$(BIN)data_t_test
+	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) data_manip_test.cpp -o $(BIN)data_manip_test -ldatamanip -ldatat -Wl,-rpath,"\$$ORIGIN/../libs"
+	chmod +x $(BIN)data_manip_test
+	$(BIN)data_manip_test
 
 install: test 
