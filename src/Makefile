@@ -26,6 +26,9 @@ clean:
 	rm -rf ../bin/*
 	rm -rf ../libs/*
 
+$(BIN)data_manip_test: data_manip_test.cpp data_manip.cpp
+	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) data_manip.cpp -c -o  $(BIN)data_manip.o
+	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) data_manip_test.cpp $(BIN)data_manip.o -o $(BIN)data_manip_test
 test: all
 	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) data_t_test.cpp -o $(BIN)data_t_test -ldatat -Wl,-rpath,"\$$ORIGIN/../libs"
 	chmod +x $(BIN)data_t_test

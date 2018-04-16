@@ -2,13 +2,12 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
 
-int main()
+namespace vz_learn::algorithm
 {
-	boost::numeric::ublas::vector<double> v(3);
-	for(unsigned int i = 0; i < v.size(); ++i) 
+	void linear_regression(boost::numeric::ublas::matrix <double>& input_matrix,\
+		boost::numeric::ublas::matrix <double>& parameters, double alpha,\
+
 	{
-		v(i) = i;
+		
 	}
-	std::cout << v << std::endl;
-	return 0;
 }

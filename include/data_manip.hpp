@@ -6,35 +6,48 @@
 #include <fstream>
 #include <sstream>
 #include <cstdio>
+#include <cctype>
 #include <string>
 #include <cassert>
 #include <algorithm>
+#include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <limits>
+#include <exception>
+
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 namespace vz_learn::data_manip
 {
-	void add_row_to_matrix(boost::numeric::ublas::vector <data_t>& data_row,
-			boost::numeric::ublas::matrix <data_t>& data_matrix,
-			int row_no);
+	const int DB_T = 0;
+	const int ST_T = 1;
+
+	void _trim_string(std::string& line);
+	void add_row_to_matrix(const std::vector <std::string>& separated_strings,
+		boost::numeric::ublas::matrix <std::string>& data_matrix,
+		const int row_no);
 	int check_data_type(const char* s);
 	int check_data_type(const std::string& s);
-	void conform_to_datatype(const boost::numeric::ublas::vector\
-			<std::string>& separated_strings,\
-			boost::numeric::ublas::vector <data_t>& data_row);
-	void get_data_from_csv(boost::numeric::ublas::matrix <data_t> &data_matrix,
-			const std::string& filepath,\
-			bool ignore_first_line=false);
-	void one_hot_encode(boost::numeric::ublas::matrix <data_t> &data_matrix,\
-			int column_no,\
-			int threshold=0);
-	void split_at_char(boost::numeric::ublas::vector <std::string>\
-			&separated_strings, const std::string& line, char c);
-	void print_head(const boost::numeric::ublas::matrix <data_t>& data_matrix);
+	void convert_to_doubles(const boost::numeric::ublas::matrix\
+		<std::string> &data_matrix_s,
+		boost::numeric::ublas::matrix <double>& data_matrix,
+		const bool OHE=false);
+	void get_data_from_csv(boost::numeric::ublas::matrix <double>& data_matrix,
+		const std::string& filepath,\
+		bool ignore_first_line=false, bool clean_dataset=false,\
+		const std::vector<int>& ignored_columns=std::vector<int>());
+	void normalize_feature(boost::numeric::ublas::matrix <double>& data_matrix,\
+		const int column_no);
+	void one_hot_encode(boost::numeric::ublas::matrix <double>& data_matrix,\
+		int column_no,\
+		int threshold=0);
+	void print_head(const boost::numeric::ublas::matrix <double>& data_matrix);
+	void print_head(const boost::numeric::ublas::matrix <std::string>& data_matrix);
 }
 
 #endif
