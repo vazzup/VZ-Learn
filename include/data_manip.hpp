@@ -8,6 +8,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 #include <exception>
 #include <fstream>
 #include <iostream>
@@ -39,20 +40,18 @@ namespace vz_learn::data_manip
 		boost::numeric::ublas::matrix <double>& data_matrix,
 		const bool OHE=false);
 	void get_data_from_csv(boost::numeric::ublas::matrix <double>& data_matrix,
-		const std::string& filepath,\
-		bool ignore_first_line=false, bool clean_dataset=false);
+		const std::string& filepath, bool ignore_first_line=false,\
+		bool clean_dataset=false, const bool OHE=false);
 	void normalize_feature(boost::numeric::ublas::matrix <double>& data_matrix,\
 		const int column_no);
 	void one_hot_encode(boost::numeric::ublas::matrix <double>& data_matrix,\
 		int column_no,\
 		int threshold=0);
-
 	void split_train_dev_test(const boost::numeric::ublas::matrix <double>& data_matrix,\
 			boost::numeric::ublas::matrix <double>& data_matrix_train,\
 			boost::numeric::ublas::matrix <double>& data_matrix_dev,\
 			boost::numeric::ublas::matrix <double>& data_matrix_test,\
-			const double train_ratio=0.6, const double dev_ratio=0.2,\
-			const double test_ratio=0.2);
+			const double train_ratio=0.6, const double dev_ratio=0.2);
 
 	template <class T>
 	void add_row_to_matrix(const std::vector <T>& data_row,
@@ -78,7 +77,6 @@ namespace vz_learn::data_manip
 		/* *************************************************
 		 * Function to print the first 5 lines of the matrix
 		 * ************************************************/
-		std::cout << "The first 5 rows of the matrix are:\n";
 		int rows = data_matrix.size1(), columns = data_matrix.size2();
 		for(int i=0; i<std::min(rows, 5); i++)
 		{

@@ -25,6 +25,7 @@ namespace vz_learn::data_manip
 			|| word[final_pos] ==  '\r' || word[final_pos] == '\b'
 			|| word[final_pos] == EOF))
 			; // Runs until last non WS is encountered
+
 		if(final_pos >= init_pos)
 			// Return the Substring between first and last non WS
 			word = word.substr(init_pos, final_pos - init_pos + 1);
@@ -162,8 +163,8 @@ namespace vz_learn::data_manip
 	}
 
 	void get_data_from_csv(boost::numeric::ublas::matrix <double>& data_matrix,\
-		const std::string& filepath,\
-		bool ignore_first_line, bool clean_dataset)
+		const std::string& filepath, bool ignore_first_line,\
+		bool clean_dataset, const bool OHE)
 	{
 		/* ***********************************************
 		 * Flow of the function:-
@@ -231,7 +232,7 @@ namespace vz_learn::data_manip
 			abort();
 		}
 		print_head<std::string>(data_matrix_s);
-		convert_to_doubles(data_matrix_s, data_matrix, true);
+		convert_to_doubles(data_matrix_s, data_matrix, OHE);
 	}
 
 	void normalize_feature(boost::numeric::ublas::matrix <double>& data_matrix,\
@@ -331,14 +332,39 @@ namespace vz_learn::data_manip
 			boost::numeric::ublas::matrix <double>& data_matrix_train,\
 			boost::numeric::ublas::matrix <double>& data_matrix_dev,\
 			boost::numeric::ublas::matrix <double>& data_matrix_test,\
-			const double train_ratio, const double dev_ratio,\
-			const double test_ratio)
+			const double train_ratio, const double dev_ratio)
 	{
-		assert(abs(train_ratio + dev_ratio + test_ratio - 1.0) <= EPS);
+		if((1.0 - train_ratio + dev_ratio) <= 0)
+		{
+			std::cerr << "Ratios don't add up to 1.0 in split_train_dev_test\n";
+			return;
+		}
 		int train_upper_limit = train_ratio * RAND_LIM;
-		int dev_upper_limit = dev_ratio * RAND_LIM;
-		int test_upper_limit = test_ratio * RAND_LIM;
-		int rows = data_matrix.size1(), column = data_matrix.size2();
-		
+		int dev_upper_limit = train_upper_limit + dev_ratio * RAND_LIM;
+		int test_upper_limit = RAND_LIM;
+		int rows = data_matrix.size1(), columns = data_matrix.size2();
+		int train_row = 0, dev_row = 0, test_row = 0;
+		std::vector <double> data_row(columns);
+		srand(time(NULL));
+		for(int row=0; row<rows; row++)
+		{
+			for(int column=0; column<columns; column++)
+			{
+				data_row[column] = data_matrix(row, column);
+			}
+			int random_sample = rand() % RAND_LIM;
+			if(random_sample < train_upper_limit)
+			{
+				add_row_to_matrix<double>(data_row, data_matrix_train, train_row++);
+			}
+			else if(random_sample < dev_upper_limit)
+			{
+				add_row_to_matrix<double>(data_row, data_matrix_dev, dev_row++);
+			}
+			else if(random_sample < test_upper_limit)
+			{
+				add_row_to_matrix<double>(data_row, data_matrix_test, test_row++);
+			}
+		}
 	}
 }
