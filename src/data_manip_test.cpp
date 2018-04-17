@@ -9,6 +9,7 @@ int main()
 		std::string("../datasets/RealEstate.csv"), true, true);
 	int rows = data_matrix.size1();
 	int columns = data_matrix.size2();
-	vz_learn::data_manip::print_head(data_matrix);
+	vz_learn::data_manip::print_head<double>(data_matrix);
+	std::cout << rows << " " << columns << "\n"; 
 	return 0;
 }

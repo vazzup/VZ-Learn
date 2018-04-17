@@ -2,7 +2,7 @@
 
 namespace vz_learn::data_manip
 {
-	void _trim_string(std::string& word)
+	void trim_string(std::string& word)
 	{
 		/* *******************************
 		 * Function to remove any trailing whitespaces (WS)
@@ -12,42 +12,24 @@ namespace vz_learn::data_manip
 			final_pos = (int)word.size(); // Position of last non WS
 		int len = final_pos;
 
-		while(init_pos < len && (word[init_pos] == '\t'
-			&& word[init_pos] == ' ' && word[init_pos] == '\n'
-			&& word[init_pos] == '\r' && word[init_pos] == '\b'
-			&& word[init_pos] == EOF))
+		while((init_pos < len) && (word[init_pos] == '\t'
+			|| word[init_pos] == ' ' || word[init_pos] == '\n'
+			|| word[init_pos] == '\r' || word[init_pos] == '\b'
+			|| word[init_pos] == EOF))
 		{
 			init_pos++; // Until first non WS is encountered
 		}
 
 		while(--final_pos >= init_pos && (word[final_pos] == '\t'
-			&& word[final_pos] == ' ' && word[final_pos] == '\n'
-			&& word[final_pos] ==  '\r' && word[final_pos] == '\b'
-			&& word[final_pos] == EOF))
+			|| word[final_pos] == ' ' || word[final_pos] == '\n'
+			|| word[final_pos] ==  '\r' || word[final_pos] == '\b'
+			|| word[final_pos] == EOF))
 			; // Runs until last non WS is encountered
-
 		if(final_pos >= init_pos)
 			// Return the Substring between first and last non WS
 			word = word.substr(init_pos, final_pos - init_pos + 1);
 		else
 			word = ""; // String is only Only WS
-	}
-
-	void add_row_to_matrix(const std::vector <std::string>& separated_strings,
-		boost::numeric::ublas::matrix <std::string>& data_matrix,
-		const int row_no)
-	{
-		/* **************************************
-		 * Function to Add Row to Matrix
-		 * *************************************/
-		int rows = data_matrix.size1();
-		int columns = separated_strings.size();
-		data_matrix.resize(rows + 1, columns, true); // Add new row to matrix
-		for(int i=0; i<columns; i++)
-		{
-			// Copy all elements into matrix row
-			data_matrix(rows, i) = separated_strings[i];
-		}
 	}
 
 	int check_data_type(const char* s)
@@ -111,13 +93,13 @@ namespace vz_learn::data_manip
 		 * 3. If non-numeric - one hot encode it? (or convert to numbers)?
 		 * 4. Repeat for all columns
 		 * *********************************/
-		int number_of_rows = data_matrix_s.size1();
-		int number_of_columns = data_matrix_s.size2();
-		if(number_of_rows == 0) // Matrix is empty
+		int rows = data_matrix_s.size1();
+		int columns = data_matrix_s.size2();
+		if(rows == 0) // Matrix is empty
 			return;
-		data_matrix.resize(number_of_rows, number_of_columns, true);
+		data_matrix.resize(rows, columns, true);
 		std::vector <int> todo_ohe; // Column No's to be OHEd
-		for(int column=0; column<number_of_columns; column++)
+		for(int column=0; column<columns; column++)
 		{
 			// Go Column Wise
 			int data_type = check_data_type(data_matrix_s(0, column));
@@ -127,7 +109,7 @@ namespace vz_learn::data_manip
 				{
 					// If it's a double, convert string 
 					// to double and copy over for each row
-					for(int row=0; row<number_of_rows; row++)
+					for(int row=0; row<rows; row++)
 					{
 						data_matrix(row, column) =\
 							std::stod(data_matrix_s(row, column));
@@ -139,7 +121,7 @@ namespace vz_learn::data_manip
 					// Store which string is assigned which ID
 					std::unordered_map <std::string, int> id_map; 
 					int id = 1; // Initial ID
-					for(int row=0; row<number_of_rows; row++)
+					for(int row=0; row<rows; row++)
 					{
 						if(id_map[data_matrix_s(row, column)])
 						{
@@ -179,10 +161,9 @@ namespace vz_learn::data_manip
 		}
 	}
 
-	void get_data_from_csv(boost::numeric::ublas::matrix <double> &data_matrix,\
+	void get_data_from_csv(boost::numeric::ublas::matrix <double>& data_matrix,\
 		const std::string& filepath,\
-		bool ignore_first_line, bool clean_dataset,\
-		const std::vector<int>& ignored_columns)
+		bool ignore_first_line, bool clean_dataset)
 	{
 		/* ***********************************************
 		 * Flow of the function:-
@@ -205,7 +186,7 @@ namespace vz_learn::data_manip
 		{
 
 			std::string line;
-			int row_no = 0, ignored_rows = 0;
+			int row_no = 0;
 			while(std::getline(infile, line)) // Read line by line
 			{
 				std::vector <std::string> separated_strings;
@@ -216,12 +197,12 @@ namespace vz_learn::data_manip
 					continue;
 				}
 				
-				_trim_string(line); // Remove any extra whitespaces
+				trim_string(line); // Remove any extra whitespaces
 				boost::split(separated_strings, line,\
 					[](char c) { return c == ','; });// Split along commas
-				for(std::string s : separated_strings)
+				for(int i=0; i<separated_strings.size(); i++)
 				{
-					_trim_string(s); // Trim separated strings
+					trim_string(separated_strings[i]); // Trim separated strings
 				}
 				
 				if(clean_dataset)
@@ -240,7 +221,7 @@ namespace vz_learn::data_manip
 						continue;
 				}
 				
-				add_row_to_matrix(separated_strings, data_matrix_s, row_no);
+				add_row_to_matrix<std::string>(separated_strings, data_matrix_s, row_no);
 				++row_no;
 			}
 		}
@@ -249,7 +230,7 @@ namespace vz_learn::data_manip
 			std::cerr << "There's some issue with the file\n";
 			abort();
 		}
-		print_head(data_matrix_s);
+		print_head<std::string>(data_matrix_s);
 		convert_to_doubles(data_matrix_s, data_matrix, true);
 	}
 
@@ -324,7 +305,6 @@ namespace vz_learn::data_manip
 		int num_unique_values = (int)nominal_values.size();
 		data_matrix.resize(rows,\
 			columns + (num_unique_values - 1), true);
-		std::cout << "Column no. " << column_no << " has " << num_unique_values << " unique values\n";
 		// Make value of all new columns in all rows 0
 		// 1 If the value is same as the column mapped onto
 		for(int row=0; row<rows; row++)
@@ -347,39 +327,18 @@ namespace vz_learn::data_manip
 		}
 	}
 
-	void print_head(const boost::numeric::ublas::matrix <double>& data_matrix)
+	void split_train_dev_test(const boost::numeric::ublas::matrix <double>& data_matrix,\
+			boost::numeric::ublas::matrix <double>& data_matrix_train,\
+			boost::numeric::ublas::matrix <double>& data_matrix_dev,\
+			boost::numeric::ublas::matrix <double>& data_matrix_test,\
+			const double train_ratio, const double dev_ratio,\
+			const double test_ratio)
 	{
-		/* *************************************************
-		 * Function to print the first 5 lines of the matrix
-		 * ************************************************/
-		std::cout << "The first 5 rows of the matrix are...\n";
-		int rows = data_matrix.size1(), columns = data_matrix.size2();
-		for(int i=0; i<std::min(rows, 5); i++)
-		{
-			for(int j=0; j<columns; j++)
-			{
-				std::cout << data_matrix(i, j) << " ";
-			}
-			std::cout << "\n";
-		}
-		return;
-	}
-
-	void print_head(const boost::numeric::ublas::matrix <std::string>& data_matrix)
-	{
-		/* *************************************************
-		 * Function to print the first 5 lines of the matrix
-		 * ************************************************/
-		std::cout << "The first 5 rows of the matrix are:\n";
-		int rows = data_matrix.size1(), columns = data_matrix.size2();
-		for(int i=0; i<std::min(rows, 5); i++)
-		{
-			for(int j=0; j<columns; j++)
-			{
-				std::cout << data_matrix(i, j) << " ";
-			}
-			std::cout << "\n";
-		}
-		return;
+		assert(abs(train_ratio + dev_ratio + test_ratio - 1.0) <= EPS);
+		int train_upper_limit = train_ratio * RAND_LIM;
+		int dev_upper_limit = dev_ratio * RAND_LIM;
+		int test_upper_limit = test_ratio * RAND_LIM;
+		int rows = data_matrix.size1(), column = data_matrix.size2();
+		
 	}
 }
