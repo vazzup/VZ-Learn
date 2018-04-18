@@ -40,5 +40,8 @@ int main()
 	vz_learn::data_manip::normalize_feature(X_train, 2);
 	std::cout << "The input matrix after normalization of column 2 is...\n";
 	vz_learn::data_manip::print_head<double>(X_train);
+	std::cout << "Testing Random initialization...\n";
+	vz_learn::data_manip::random_initialization(X_dev);
+	vz_learn::data_manip::print_head<double>(X_dev);
 	return 0;
 }

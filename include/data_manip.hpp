@@ -13,6 +13,7 @@
 #include <fstream>
 #include <iostream>
 #include <limits>
+#include <random>
 #include <sstream>
 #include <string>
 #include <unordered_map>
@@ -47,6 +48,7 @@ namespace vz_learn::data_manip
 	void one_hot_encode(boost::numeric::ublas::matrix <double>& data_matrix,\
 		int column_no,\
 		int threshold=0);
+	void random_initialization(boost::numeric::ublas::matrix <double>& data_matrix);
 	void split_train_dev_test(const boost::numeric::ublas::matrix <double>& data_matrix,\
 			boost::numeric::ublas::matrix <double>& data_matrix_train,\
 			boost::numeric::ublas::matrix <double>& data_matrix_dev,\

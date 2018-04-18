@@ -42,7 +42,7 @@ namespace vz_learn::data_manip
 	int check_data_type(const std::string& s)
 	{
 		/* **********************************
-		 * Function to check the data type of 
+		 * Function to check the data type of
 		 * the information in given string
 		 * returns DB_T if double
 		 * returns ST_T if string
@@ -64,7 +64,7 @@ namespace vz_learn::data_manip
 			{
 				// Non numeric character, also not decimal
 				numeric = false;
-			} 
+			}
 		}
 		if(numeric)
 		{
@@ -104,11 +104,11 @@ namespace vz_learn::data_manip
 		{
 			// Go Column Wise
 			int data_type = check_data_type(data_matrix_s(0, column));
-			switch(data_type) 
+			switch(data_type)
 			{
 				case DB_T:
 				{
-					// If it's a double, convert string 
+					// If it's a double, convert string
 					// to double and copy over for each row
 					for(int row=0; row<rows; row++)
 					{
@@ -120,7 +120,7 @@ namespace vz_learn::data_manip
 				case ST_T:
 				{
 					// Store which string is assigned which ID
-					std::unordered_map <std::string, int> id_map; 
+					std::unordered_map <std::string, int> id_map;
 					int id = 1; // Initial ID
 					for(int row=0; row<rows; row++)
 					{
@@ -197,7 +197,7 @@ namespace vz_learn::data_manip
 					ignore_first_line = false;
 					continue;
 				}
-				
+
 				trim_string(line); // Remove any extra whitespaces
 				boost::split(separated_strings, line,\
 					[](char c) { return c == ','; });// Split along commas
@@ -205,13 +205,13 @@ namespace vz_learn::data_manip
 				{
 					trim_string(separated_strings[i]); // Trim separated strings
 				}
-				
+
 				if(clean_dataset)
 				{
 					// Get rid of rows with NULL / Empty columns
 					bool null_ = false;
 					for(std::string s : separated_strings)
-					{ 
+					{
 						if(s == "")
 						{
 							null_ = true;
@@ -221,13 +221,13 @@ namespace vz_learn::data_manip
 					if(null_)
 						continue;
 				}
-				
+
 				add_row_to_matrix<std::string>(separated_strings, data_matrix_s, row_no);
 				++row_no;
 			}
 		}
 		else
-		{ 
+		{
 			std::cerr << "There's some issue with the file\n";
 			abort();
 		}
@@ -311,7 +311,7 @@ namespace vz_learn::data_manip
 		for(int row=0; row<rows; row++)
 		{
 			// Copy of row's nominal value
-			double orig_val = data_matrix(row, column_no); 
+			double orig_val = data_matrix(row, column_no);
 			for(auto it : nominal_values)
 			{
 				if(it == orig_val)
@@ -328,12 +328,35 @@ namespace vz_learn::data_manip
 		}
 	}
 
+	void random_initialization(boost::numeric::ublas::matrix <double>& data_matrix)
+	{
+		/* ***********************************************
+		 * Function to initialize a matrix with random values between 0 and 1
+		 * ***********************************************/
+		std::random_device non_deterministic_generator;
+		std::mt19937 generator(non_deterministic_generator());
+		std::uniform_real_distribution<double> distribution(0, 1);
+		int rows = data_matrix.size1(), columns = data_matrix.size2();
+		for(int row=0; row<rows; row++)
+		{
+			for(int column=0; column<columns; column++)
+			{
+				data_matrix(row, column) = distribution(generator);
+			}
+		}
+	}
+
 	void split_train_dev_test(const boost::numeric::ublas::matrix <double>& data_matrix,\
 			boost::numeric::ublas::matrix <double>& data_matrix_train,\
 			boost::numeric::ublas::matrix <double>& data_matrix_dev,\
 			boost::numeric::ublas::matrix <double>& data_matrix_test,\
 			const double train_ratio, const double dev_ratio)
 	{
+		/* ***************************************
+		 * Function to split a dataset into training set,
+		 * dev set and training set.
+		 * **************************************/
+		// Sum of train and dev need to be less than or equal to 1
 		if((1.0 - train_ratio + dev_ratio) <= 0)
 		{
 			std::cerr << "Ratios don't add up to 1.0 in split_train_dev_test\n";
@@ -345,14 +368,16 @@ namespace vz_learn::data_manip
 		int rows = data_matrix.size1(), columns = data_matrix.size2();
 		int train_row = 0, dev_row = 0, test_row = 0;
 		std::vector <double> data_row(columns);
-		srand(time(NULL));
+		std::random_device non_deterministic_generator;
+		std::mt19937 generator(non_deterministic_generator());
+		std::uniform_int_distribution<int> distribution(0, RAND_LIM - 1);
 		for(int row=0; row<rows; row++)
 		{
 			for(int column=0; column<columns; column++)
 			{
 				data_row[column] = data_matrix(row, column);
 			}
-			int random_sample = rand() % RAND_LIM;
+			int random_sample = distribution(generator);
 			if(random_sample < train_upper_limit)
 			{
 				add_row_to_matrix<double>(data_row, data_matrix_train, train_row++);

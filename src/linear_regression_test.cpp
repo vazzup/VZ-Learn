@@ -2,7 +2,7 @@
 #include "data_manip.hpp"
 #include <boost/numeric/ublas/matrix.hpp>
 
-double cost_function(boost::numeric::ublas::matrix <double>& input_matrix,\
+double hypothesis_function(boost::numeric::ublas::matrix <double>& input_matrix,\
 	boost::numeric::ublas::matrix <double>& parameters)
 {
 	return 42.0;
@@ -10,7 +10,9 @@ double cost_function(boost::numeric::ublas::matrix <double>& input_matrix,\
 
 int main()
 {
-	boost::numeric::ublas::matrix <double> input_matrix, parameters;
-	vz_learn::algorithm::linear_regression(input_matrix, parameters,cost_function);
+	boost::numeric::ublas::matrix <double> input_matrix, parameters,\
+		output_matrix;
+	vz_learn::algorithm::linear_regression(input_matrix, output_matrix,\
+		parameters, hypothesis_function);
 	return 0;
 }
