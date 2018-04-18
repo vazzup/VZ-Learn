@@ -42,7 +42,7 @@ namespace vz_learn::data_manip
 		const bool OHE=false);
 	void get_data_from_csv(boost::numeric::ublas::matrix <double>& data_matrix,
 		const std::string& filepath, bool ignore_first_line=false,\
-		bool clean_dataset=false, const bool OHE=false);
+		const bool clean_dataset=false, const bool OHE=false);
 	void normalize_feature(boost::numeric::ublas::matrix <double>& data_matrix,\
 		const int column_no);
 	void one_hot_encode(boost::numeric::ublas::matrix <double>& data_matrix,\
@@ -50,10 +50,10 @@ namespace vz_learn::data_manip
 		int threshold=0);
 	void random_initialization(boost::numeric::ublas::matrix <double>& data_matrix);
 	void split_train_dev_test(const boost::numeric::ublas::matrix <double>& data_matrix,\
-			boost::numeric::ublas::matrix <double>& data_matrix_train,\
-			boost::numeric::ublas::matrix <double>& data_matrix_dev,\
-			boost::numeric::ublas::matrix <double>& data_matrix_test,\
-			const double train_ratio=0.6, const double dev_ratio=0.2);
+		boost::numeric::ublas::matrix <double>& data_matrix_train,\
+		boost::numeric::ublas::matrix <double>& data_matrix_dev,\
+		boost::numeric::ublas::matrix <double>& data_matrix_test,\
+		const double train_ratio=0.6, const double dev_ratio=0.2);
 
 	template <class T>
 	void add_row_to_matrix(const std::vector <T>& data_row,
@@ -70,6 +70,21 @@ namespace vz_learn::data_manip
 		{
 			// Copy all elements into matrix row
 			data_matrix(rows, column) = data_row[column];
+		}
+	}
+
+	template <class T>
+	void copy_matrix(const boost::numeric::ublas::matrix <T>& from,
+		boost::numeric::ublas::matrix <T>& to)
+	{
+		int rows = from.size1(), columns = from.size2();
+		to.resize(rows, columns);
+		for(int row=0; row<rows; row++)
+		{
+			for(int column=0; column<columns; column++)
+			{
+				to(row, column) = from(row, column);
+			}
 		}
 	}
 

@@ -164,7 +164,7 @@ namespace vz_learn::data_manip
 
 	void get_data_from_csv(boost::numeric::ublas::matrix <double>& data_matrix,\
 		const std::string& filepath, bool ignore_first_line,\
-		bool clean_dataset, const bool OHE)
+		const bool clean_dataset, const bool OHE)
 	{
 		/* ***********************************************
 		 * Flow of the function:-
@@ -347,10 +347,10 @@ namespace vz_learn::data_manip
 	}
 
 	void split_train_dev_test(const boost::numeric::ublas::matrix <double>& data_matrix,\
-			boost::numeric::ublas::matrix <double>& data_matrix_train,\
-			boost::numeric::ublas::matrix <double>& data_matrix_dev,\
-			boost::numeric::ublas::matrix <double>& data_matrix_test,\
-			const double train_ratio, const double dev_ratio)
+		boost::numeric::ublas::matrix <double>& data_matrix_train,\
+		boost::numeric::ublas::matrix <double>& data_matrix_dev,\
+		boost::numeric::ublas::matrix <double>& data_matrix_test,\
+		const double train_ratio, const double dev_ratio)
 	{
 		/* ***************************************
 		 * Function to split a dataset into training set,

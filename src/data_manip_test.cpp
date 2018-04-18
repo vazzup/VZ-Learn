@@ -4,6 +4,7 @@
 #include <string>
 
 #include <boost/numeric/ublas/matrix_proxy.hpp>
+
 int main()
 {
 	boost::numeric::ublas::matrix <double> data_matrix, X_train, X_dev, X_test;
@@ -43,5 +44,10 @@ int main()
 	std::cout << "Testing Random initialization...\n";
 	vz_learn::data_manip::random_initialization(X_dev);
 	vz_learn::data_manip::print_head<double>(X_dev);
+	std::cout << "Testing Shallow Copy...\n";
+	vz_learn::data_manip::copy_matrix<double>(X_dev, X_test);
+	vz_learn::data_manip::print_head<double>(X_test);
+	X_dev(0, 0) = 1.5;
+	std::cout << X_dev(0, 0) << " " << X_test(0, 0) << "\n";
 	return 0;
 }
