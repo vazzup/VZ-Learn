@@ -33,7 +33,6 @@ namespace vz_learn::data_manip
 	const double EPS = 0.01;
 	const int RAND_LIM = 10000;
 
-	void trim_string(std::string& line);
 	int check_data_type(const char* s);
 	int check_data_type(const std::string& s);
 	void convert_to_doubles(const boost::numeric::ublas::matrix\
@@ -54,6 +53,7 @@ namespace vz_learn::data_manip
 		boost::numeric::ublas::matrix <double>& data_matrix_dev,\
 		boost::numeric::ublas::matrix <double>& data_matrix_test,\
 		const double train_ratio=0.6, const double dev_ratio=0.2);
+	void trim_string(std::string& line);
 
 	template <class T>
 	void add_row_to_matrix(const std::vector <T>& data_row,
@@ -73,6 +73,21 @@ namespace vz_learn::data_manip
 		}
 	}
 
+	template<class T>
+	void remove_column_from_matrix(boost::numeric::ublas::matrix <T>& data_matrix,\
+		const int column)
+	{
+		int rows = data_matrix.size1(), columns = data_matrix.size2();
+		if(column != columns - 1)
+		{
+			for(int row=0; row<rows; row++)
+			{
+				data_matrix(row, column) = data_matrix(row, columns - 1);
+			}
+		}
+		data_matrix.resize(rows, columns - 1, true);
+	}
+
 	template <class T>
 	void copy_matrix(const boost::numeric::ublas::matrix <T>& from,
 		boost::numeric::ublas::matrix <T>& to)
@@ -87,7 +102,6 @@ namespace vz_learn::data_manip
 			}
 		}
 	}
-
 	template <class T>
 	void print_head(const boost::numeric::ublas::matrix <T>& data_matrix)
 	{

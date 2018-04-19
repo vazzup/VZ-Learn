@@ -2,37 +2,6 @@
 
 namespace vz_learn::data_manip
 {
-	void trim_string(std::string& word)
-	{
-		/* *******************************
-		 * Function to remove any trailing whitespaces (WS)
-		 * or unwanted special characters like \r \b \n EOF etc.
-		 * ******************************/
-		int init_pos = 0, // Position of first non WS
-			final_pos = (int)word.size(); // Position of last non WS
-		int len = final_pos;
-
-		while((init_pos < len) && (word[init_pos] == '\t'
-			|| word[init_pos] == ' ' || word[init_pos] == '\n'
-			|| word[init_pos] == '\r' || word[init_pos] == '\b'
-			|| word[init_pos] == EOF))
-		{
-			init_pos++; // Until first non WS is encountered
-		}
-
-		while(--final_pos >= init_pos && (word[final_pos] == '\t'
-			|| word[final_pos] == ' ' || word[final_pos] == '\n'
-			|| word[final_pos] ==  '\r' || word[final_pos] == '\b'
-			|| word[final_pos] == EOF))
-			; // Runs until last non WS is encountered
-
-		if(final_pos >= init_pos)
-			// Return the Substring between first and last non WS
-			word = word.substr(init_pos, final_pos - init_pos + 1);
-		else
-			word = ""; // String is only Only WS
-	}
-
 	int check_data_type(const char* s)
 	{
 		// In case of string literal
@@ -391,5 +360,36 @@ namespace vz_learn::data_manip
 				add_row_to_matrix<double>(data_row, data_matrix_test, test_row++);
 			}
 		}
+	}
+
+	void trim_string(std::string& word)
+	{
+		/* *******************************
+		 * Function to remove any trailing whitespaces (WS)
+		 * or unwanted special characters like \r \b \n EOF etc.
+		 * ******************************/
+		int init_pos = 0, // Position of first non WS
+			final_pos = (int)word.size(); // Position of last non WS
+		int len = final_pos;
+
+		while((init_pos < len) && (word[init_pos] == '\t'
+			|| word[init_pos] == ' ' || word[init_pos] == '\n'
+			|| word[init_pos] == '\r' || word[init_pos] == '\b'
+			|| word[init_pos] == EOF))
+		{
+			init_pos++; // Until first non WS is encountered
+		}
+
+		while(--final_pos >= init_pos && (word[final_pos] == '\t'
+			|| word[final_pos] == ' ' || word[final_pos] == '\n'
+			|| word[final_pos] ==  '\r' || word[final_pos] == '\b'
+			|| word[final_pos] == EOF))
+			; // Runs until last non WS is encountered
+
+		if(final_pos >= init_pos)
+			// Return the Substring between first and last non WS
+			word = word.substr(init_pos, final_pos - init_pos + 1);
+		else
+			word = ""; // String is only Only WS
 	}
 }
