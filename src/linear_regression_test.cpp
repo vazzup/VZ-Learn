@@ -1,6 +1,8 @@
 #include "linear_regression.hpp"
 #include "data_manip.hpp"
 
+#include <cstdio>
+
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
@@ -45,7 +47,10 @@ int main()
 	vz_learn::data_manip::print_head<double>(X_train);
 	theta.resize(X_train.size2(), Y_train.size2());
 	vz_learn::data_manip::random_initialization(theta);
-	vz_learn::algorithm::linear_regression(X_train, Y_train, theta,\
-					hypothesis_function, 0.01, 1000, true);
+	std::vector <double> cost;
+	cost = vz_learn::algorithm::linear_regression(X_train, Y_train, theta,\
+					hypothesis_function, 0.006, 10000, false);
+	std::cout << "Initial Cost: " << cost[0] << "\n";
+	std::cout << "Final Cost:" << cost[cost.size() - 1] << "\n";
 	return 0;
 }

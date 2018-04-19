@@ -2,7 +2,8 @@
 
 namespace vz_learn::algorithm
 {
-	void linear_regression(boost::numeric::ublas::matrix <double>& input_matrix,\
+	std::vector<double> linear_regression(\
+		boost::numeric::ublas::matrix <double>& input_matrix,\
 		boost::numeric::ublas::matrix <double>& output_matrix,\
 		boost::numeric::ublas::matrix <double>& parameters,\
 		void (*hypothesis_function)\
@@ -13,6 +14,7 @@ namespace vz_learn::algorithm
 	{
 		if(debug)
 			std::cout << "Starting Linear Regression...\n";
+		std::vector<double> cost_vector;
 		assert(input_matrix.size2() == parameters.size1());
 		assert(input_matrix.size1() == output_matrix.size1());
 		assert(parameters.size2() == output_matrix.size2());
@@ -30,13 +32,15 @@ namespace vz_learn::algorithm
 			hypothesis_function(input_matrix, parameters, hypothesis);
 			assert(hypothesis.size1() == output_matrix.size1());
 			assert(hypothesis.size2() == output_matrix.size2());
-			hypothesis = output_matrix - hypothesis;
-			hypothesis = prod(trans(hypothesis), hypothesis);
+			hypothesis = output_matrix - hypothesis; // Error
+			hypothesis = prod(trans(hypothesis), hypothesis); // Square Error
+			// Mean Square Error
 			double cost =\
 				boost::numeric::ublas::sum(boost::numeric::ublas::prec_prod(
 					boost::numeric::ublas::scalar_vector<double>\
 					(hypothesis.size1()), hypothesis))\
-						/ output_matrix.size1();
+						/ (2.0 * output_matrix.size1());
+			cost_vector.push_back(cost);
 			if(debug)
 				std::cout << iteration << "th Iteration - Cost is: " << cost << "\n";
 			delta_parameters = boost::numeric::ublas::zero_matrix\
@@ -63,14 +67,22 @@ namespace vz_learn::algorithm
 							parameter_row))(0, 0);
 				}
 			}
-			for(int row=0; row<parameter_rows; row++)
-			{
-				std::cout << delta_parameters(row, 0) << ",";
-			}
-			std::cout << "\n";
-			getchar();
-			parameters = parameters - (delta_parameters *\
-				(alpha / parameter_rows));
+			delta_parameters *= alpha;
+			delta_parameters /= parameter_rows;
+			parameters = parameters - delta_parameters;
 		}
+		hypothesis_function(input_matrix, parameters, hypothesis);
+		assert(hypothesis.size1() == output_matrix.size1());
+		assert(hypothesis.size2() == output_matrix.size2());
+		hypothesis = output_matrix - hypothesis; // Error
+		hypothesis = prod(trans(hypothesis), hypothesis); // Square Error
+		// Mean Square Error
+		double cost =\
+			boost::numeric::ublas::sum(boost::numeric::ublas::prec_prod(
+				boost::numeric::ublas::scalar_vector<double>\
+				(hypothesis.size1()), hypothesis))\
+					/ (2.0 * output_matrix.size1());
+		cost_vector.push_back(cost);
+		return cost_vector;
 	}
 }

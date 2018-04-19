@@ -6,8 +6,8 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstdio>
-
 #include <iostream>
+#include <vector>
 
 #include "data_manip.hpp"
 
@@ -18,7 +18,8 @@
 
 namespace vz_learn::algorithm
 {
-	void linear_regression(boost::numeric::ublas::matrix <double>& input_matrix,\
+	std::vector<double> linear_regression(\
+		boost::numeric::ublas::matrix <double>& input_matrix,\
 		boost::numeric::ublas::matrix <double>& output_matrix,\
 		boost::numeric::ublas::matrix <double>& parameters,\
 		void (*hypothesis_function)\
