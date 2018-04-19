@@ -31,12 +31,14 @@ namespace vz_learn::algorithm
 			assert(hypothesis.size1() == output_matrix.size1());
 			assert(hypothesis.size2() == output_matrix.size2());
 			hypothesis = output_matrix - hypothesis;
+			hypothesis = prod(trans(hypothesis), hypothesis);
 			double cost =\
 				boost::numeric::ublas::sum(boost::numeric::ublas::prec_prod(
 					boost::numeric::ublas::scalar_vector<double>\
-					(hypothesis.size1()), hypothesis));
+					(hypothesis.size1()), hypothesis))\
+						/ output_matrix.size1();
 			if(debug)
-				std::cout << "Cost is: " << cost << "\n";
+				std::cout << iteration << "th Iteration - Cost is: " << cost << "\n";
 			delta_parameters = boost::numeric::ublas::zero_matrix\
 				<double> (parameter_rows, parameter_columns);
 			for(int input_row=0; input_row<input_rows; input_row++)
@@ -55,12 +57,18 @@ namespace vz_learn::algorithm
 							0, output_columns);
 					hypothesis_function(input_row_matrix,\
 							parameters, hypothesis);
-					delta_parameters(parameter_row, 1) +=\
+					delta_parameters(parameter_row, 0) +=\
 						((hypothesis - output_row_matrix)\
 						* input_matrix(input_row,\
 							parameter_row))(0, 0);
 				}
 			}
+			for(int row=0; row<parameter_rows; row++)
+			{
+				std::cout << delta_parameters(row, 0) << ",";
+			}
+			std::cout << "\n";
+			getchar();
 			parameters = parameters - (delta_parameters *\
 				(alpha / parameter_rows));
 		}

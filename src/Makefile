@@ -28,8 +28,14 @@ check_dirs:
 	if [ ! -d "../lib" ]; then mkdir ../lib; fi
 
 test: check_dirs all
+	@echo -e "\n--------------------------------------"
+	@echo -e "|TESTING DATA MANIP"
+	@echo -e "--------------------------------------\n"
 	chmod +x $(BIN)data_manip_test
 	$(BIN)data_manip_test
+	@echo -e "\n--------------------------------------"
+	@echo -e "|TESTING LINEAR REGRESSION"
+	@echo -e "--------------------------------------\n"
 	chmod +x $(BIN)linear_regression_test
 	$(BIN)linear_regression_test
 

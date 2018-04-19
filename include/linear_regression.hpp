@@ -1,5 +1,12 @@
+#ifndef _VZ_LINEAR_REGRESSION_
+
+#define _VZ_LINEAR_REGRESSION_
+
 #include <cassert>
 #include <cmath>
+#include <cstdlib>
+#include <cstdio>
+
 #include <iostream>
 
 #include "data_manip.hpp"
@@ -20,3 +27,5 @@ namespace vz_learn::algorithm
 			boost::numeric::ublas::matrix<double>& hypothesis),\
 		const double alpha=1e-2, const int iterations=500, const bool debug=false);
 }
+
+#endif

@@ -1,6 +1,6 @@
-#ifndef _DATA_MANIP_
+#ifndef _VZ_DATA_MANIP_
 
-#define _DATA_MANIP_
+#define _VZ_DATA_MANIP_
 
 #include <algorithm>
 #include <cassert>
@@ -48,10 +48,14 @@ namespace vz_learn::data_manip
 		int column_no,\
 		int threshold=0);
 	void random_initialization(boost::numeric::ublas::matrix <double>& data_matrix);
-	void split_train_dev_test(const boost::numeric::ublas::matrix <double>& data_matrix,\
-		boost::numeric::ublas::matrix <double>& data_matrix_train,\
-		boost::numeric::ublas::matrix <double>& data_matrix_dev,\
-		boost::numeric::ublas::matrix <double>& data_matrix_test,\
+	void split_train_dev_test(const boost::numeric::ublas::matrix <double>& X,\
+		boost::numeric::ublas::matrix <double>& Y,\
+		boost::numeric::ublas::matrix <double>& X_train,\
+		boost::numeric::ublas::matrix <double>& X_dev,\
+		boost::numeric::ublas::matrix <double>& X_test,\
+		boost::numeric::ublas::matrix <double>& Y_train,\
+		boost::numeric::ublas::matrix <double>& Y_dev,\
+		boost::numeric::ublas::matrix <double>& Y_test,\
 		const double train_ratio=0.6, const double dev_ratio=0.2);
 	void trim_string(std::string& line);
 

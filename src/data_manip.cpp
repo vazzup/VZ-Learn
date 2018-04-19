@@ -315,10 +315,14 @@ namespace vz_learn::data_manip
 		}
 	}
 
-	void split_train_dev_test(const boost::numeric::ublas::matrix <double>& data_matrix,\
-		boost::numeric::ublas::matrix <double>& data_matrix_train,\
-		boost::numeric::ublas::matrix <double>& data_matrix_dev,\
-		boost::numeric::ublas::matrix <double>& data_matrix_test,\
+	void split_train_dev_test(const boost::numeric::ublas::matrix <double>& X,\
+		boost::numeric::ublas::matrix <double>& Y,\
+		boost::numeric::ublas::matrix <double>& X_train,\
+		boost::numeric::ublas::matrix <double>& X_dev,\
+		boost::numeric::ublas::matrix <double>& X_test,\
+		boost::numeric::ublas::matrix <double>& Y_train,\
+		boost::numeric::ublas::matrix <double>& Y_dev,\
+		boost::numeric::ublas::matrix <double>& Y_test,\
 		const double train_ratio, const double dev_ratio)
 	{
 		/* ***************************************
@@ -334,9 +338,9 @@ namespace vz_learn::data_manip
 		int train_upper_limit = train_ratio * RAND_LIM;
 		int dev_upper_limit = train_upper_limit + dev_ratio * RAND_LIM;
 		int test_upper_limit = RAND_LIM;
-		int rows = data_matrix.size1(), columns = data_matrix.size2();
+		int rows = X.size1(), columns = X.size2();
 		int train_row = 0, dev_row = 0, test_row = 0;
-		std::vector <double> data_row(columns);
+		std::vector <double> data_row_X(columns), data_row_Y(1);
 		std::random_device non_deterministic_generator;
 		std::mt19937 generator(non_deterministic_generator());
 		std::uniform_int_distribution<int> distribution(0, RAND_LIM - 1);
@@ -344,20 +348,24 @@ namespace vz_learn::data_manip
 		{
 			for(int column=0; column<columns; column++)
 			{
-				data_row[column] = data_matrix(row, column);
+				data_row_X[column] = X(row, column);
 			}
+			data_row_Y[0] = Y(row, 0);
 			int random_sample = distribution(generator);
 			if(random_sample < train_upper_limit)
 			{
-				add_row_to_matrix<double>(data_row, data_matrix_train, train_row++);
+				add_row_to_matrix<double>(data_row_X, X_train, train_row++);
+				add_row_to_matrix<double>(data_row_Y, Y_train, train_row++);
 			}
 			else if(random_sample < dev_upper_limit)
 			{
-				add_row_to_matrix<double>(data_row, data_matrix_dev, dev_row++);
+				add_row_to_matrix<double>(data_row_X, X_dev, dev_row++);
+				add_row_to_matrix<double>(data_row_Y, Y_dev, dev_row++);
 			}
 			else if(random_sample < test_upper_limit)
 			{
-				add_row_to_matrix<double>(data_row, data_matrix_test, test_row++);
+				add_row_to_matrix<double>(data_row_X, X_test, test_row++);
+				add_row_to_matrix<double>(data_row_Y, Y_test, test_row++);
 			}
 		}
 	}

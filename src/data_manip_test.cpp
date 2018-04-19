@@ -7,31 +7,30 @@
 
 int main()
 {
-	boost::numeric::ublas::matrix <double> data_matrix, X_train, X_dev, X_test;
-	vz_learn::data_manip::get_data_from_csv(data_matrix,\
+	boost::numeric::ublas::matrix <double> X, X_train, X_dev, X_test;
+	boost::numeric::ublas::matrix <double> Y, Y_train, Y_dev, Y_test;
+	vz_learn::data_manip::get_data_from_csv(X,\
 		std::string("../datasets/RealEstate.csv"), true, true, false);
-	int rows = data_matrix.size1();
-	int columns = data_matrix.size2();
+	int rows = X.size1();
+	int columns = X.size2();
 	std::cout << "After reading from csv...\n";
-	vz_learn::data_manip::print_head<double>(data_matrix);
+	vz_learn::data_manip::print_head<double>(X);
+	Y = subrange(X, 0, X.size1(), X.size2() - 1, X.size2());
 	std::cout << "Splitting into train, test, dev...\n";
-	vz_learn::data_manip::split_train_dev_test(data_matrix, X_train, X_dev, X_test);
+	vz_learn::data_manip::split_train_dev_test(X, Y, X_train, X_dev, X_test,\
+							Y_train, Y_dev, Y_test);
 	std::cout << "The split matrices are...\nTrain:-\n";
 	vz_learn::data_manip::print_head<double>(X_train);
 	std::cout << "Dev:-\n";
 	vz_learn::data_manip::print_head<double>(X_dev);
 	std::cout << "Test:-\n";
 	vz_learn::data_manip::print_head<double>(X_test);
-	boost::numeric::ublas::matrix <double> Y_train = subrange(X_train, 0, X_train.size1(), X_train.size2() - 1, X_train.size2());
-	boost::numeric::ublas::matrix <double> Y_dev = subrange(X_dev, 0, X_dev.size1(), X_dev.size2() - 1, X_dev.size2());
-	boost::numeric::ublas::matrix <double> Y_test= subrange(X_test, 0, X_test.size1(), X_test.size2() - 1, X_test.size2());
 	std::cout << "The output matrices are...\nTrain\n";
 	vz_learn::data_manip::print_head<double>(Y_train);
 	std::cout << "Dev:-\n";
 	vz_learn::data_manip::print_head<double>(Y_dev);
 	std::cout << "Test:-\n";
 	vz_learn::data_manip::print_head<double>(Y_test);
-	data_matrix = subrange(data_matrix, 0, data_matrix.size1(), 0, data_matrix.size2() - 1);
 	std::cout << "The input matrix without OP is...\nTrain\n";
 	vz_learn::data_manip::print_head<double>(X_train);
 	std::cout << "Dev:-\n";
@@ -50,7 +49,7 @@ int main()
 	X_dev(0, 0) = 1.5;
 	std::cout << X_dev(0, 0) << " " << X_test(0, 0) << "\n";
 	std::cout << "Testing Remove Column...\n";
-	vz_learn::data_manip::remove_column_from_matrix<double>(data_matrix, 0);
-	vz_learn::data_manip::print_head<double>(data_matrix);
+	vz_learn::data_manip::remove_column_from_matrix<double>(X, 0);
+	vz_learn::data_manip::print_head<double>(X);
 	return 0;
 }
