@@ -5,7 +5,7 @@ LIBS=../libs/
 
 .PHONY: check_dirs clean test all install 
 
-all: check_dirs $(BIN)data_manip_test $(BIN)linear_regression_test
+all: check_dirs $(BIN)data_manip_test $(BIN)linear_regression_test $(BIN)naive_bayes_test
 
 $(BIN)data_manip.o: data_manip.cpp $(INCLUDE)data_manip.hpp
 	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) -c data_manip.cpp -o $(BIN)data_manip.o
@@ -13,11 +13,17 @@ $(BIN)data_manip.o: data_manip.cpp $(INCLUDE)data_manip.hpp
 $(BIN)linear_regression.o: linear_regression.cpp $(INCLUDE)linear_regression.hpp $(BIN)data_manip.o
 	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) -c linear_regression.cpp $(BIN)data_manip.o -o $(BIN)linear_regression.o
 
+$(BIN)classifiers.o: classifiers.cpp $(INCLUDE)classifiers.hpp $(BIN)data_manip.o
+	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) -c classifiers.cpp $(BIN)data_manip.o -o $(BIN)classifiers.o
+
 $(BIN)data_manip_test: data_manip_test.cpp $(BIN)data_manip.o
 	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) data_manip_test.cpp $(BIN)data_manip.o -o $(BIN)data_manip_test
 
 $(BIN)linear_regression_test: linear_regression_test.cpp $(BIN)linear_regression.o
 	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) linear_regression_test.cpp $(BIN)linear_regression.o $(BIN)data_manip.o -o $(BIN)linear_regression_test
+
+$(BIN)naive_bayes_test: naive_bayes_test.cpp $(BIN)classifiers.o
+	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) naive_bayes_test.cpp $(BIN)classifiers.o $(BIN)data_manip.o -o $(BIN)naive_bayes_test
 
 clean:
 	rm -rf ../bin/*

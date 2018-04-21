@@ -17,6 +17,11 @@ void hypothesis_function(boost::numeric::ublas::matrix <double>& input_matrix,\
 
 int main()
 {
+	/* ***************************************
+	 * Program to predict price / sq. ft. of house based on
+	 * size, bedrooms, bathrooms, and location
+	 * Demonstrates use of normalization and all
+	 * ******************************************/
 	boost::numeric::ublas::matrix <double> X, theta, Y;
 	boost::numeric::ublas::matrix <double> X_train, X_dev, X_test;
 	boost::numeric::ublas::matrix <double> Y_train, Y_dev, Y_test;
@@ -24,14 +29,14 @@ int main()
 	vz_learn::data_manip::get_data_from_csv(X, filepath,\
 			true, true, false);
 	// Create output matrix
-	Y = subrange(X, 0, X.size1(), 2, 3);
+	Y = subrange(X, 0, X.size1(), 6, 7);
 	// Normalize the size feature
 	vz_learn::data_manip::normalize_feature(X, 5);
 	// Remove Status
 	vz_learn::data_manip::remove_column_from_matrix(X, 7);
-	// Remove price/sq.ft
-	vz_learn::data_manip::remove_column_from_matrix(X, 6);
 	// Remove output column
+	vz_learn::data_manip::remove_column_from_matrix(X, 6);
+	// Remove price
 	vz_learn::data_manip::remove_column_from_matrix(X, 2);
 	// Replace Listing ID with 1s for theta_0 (bias value)
 	for(int row=0; row<(int)X.size1(); row++)
@@ -49,7 +54,7 @@ int main()
 	vz_learn::data_manip::random_initialization(theta);
 	std::vector <double> cost;
 	cost = vz_learn::algorithm::linear_regression(X_train, Y_train, theta,\
-					hypothesis_function, 0.006, 10000, false);
+					hypothesis_function, 0.006, 10, true);
 	std::cout << "Initial Cost: " << cost[0] << "\n";
 	std::cout << "Final Cost:" << cost[cost.size() - 1] << "\n";
 	return 0;

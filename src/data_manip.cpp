@@ -107,7 +107,7 @@ namespace vz_learn::data_manip
 							data_matrix(row, column) = id++;
 						}
 					}
-					todo_ohe.push_back(column); // May have to applt OHE
+					todo_ohe.push_back(column); // May have to apply OHE
 					break;
 				}
 				default:
@@ -129,6 +129,60 @@ namespace vz_learn::data_manip
 				one_hot_encode(data_matrix, column);
 			}
 		}
+	}
+
+	std::vector<double> discretize_feature(boost::numeric::ublas::matrix <double>& data_matrix,\
+		const int column, const int bins)
+	{
+		/* **********************************
+		 * Discretize a column into bins
+		 * distributed equally across max and min
+		 * **********************************/
+		int rows = data_matrix.size1(), columns = data_matrix.size2();
+		std::vector<double> bins_vector, values_vector;
+		bins_vector.resize(bins);
+		// Add all values  of the feature to the vector
+		for(int row=0; row<rows; row++)
+		{
+			values_vector.push_back(data_matrix(row, column));
+		}
+		// Sort the feature vector
+		std::sort(values_vector.begin(), values_vector.end());
+		int bin = 1;
+		int i = 0;
+		int bin_size = std::ceil(((double)rows) / bins); // No of elements in 1st quantile
+		std::cout << bin_size << " " << rows << "\n";
+		while(bin <= bins && i < rows)
+		{
+			// For each row, check row number
+			// If row number is a multiple of the 1st quantile number,
+			// Create a new bin and move on to the next one
+			if(i == (bin_size * bin) - 1)
+			{
+				bins_vector[bin - 1] = values_vector[i];
+				++bin;
+			}
+			i++;
+		}
+		if(bin <= bins)
+		{
+			// If the number of elements isn't a perfect multiple
+			// Of the number of  bins
+			bins_vector[bin++ - 1] = values_vector[values_vector.size() - 1] + 1;
+		}
+		for(int row=0; row<rows; row++)
+		{
+			for(int bin=1; bin<=bins; bin++)
+			{
+				if(data_matrix(row, column) <= bins_vector[bin - 1])
+				{
+					// Smallest bin greater than current row value
+					data_matrix(row, column) = bin;
+					break;
+				}
+			}
+		}
+		return bins_vector; // Discretized values
 	}
 
 	void get_data_from_csv(boost::numeric::ublas::matrix <double>& data_matrix,\

@@ -39,6 +39,8 @@ namespace vz_learn::data_manip
 		<std::string> &data_matrix_s,
 		boost::numeric::ublas::matrix <double>& data_matrix,
 		const bool OHE=false);
+	std::vector<double> discretize_feature(boost::numeric::ublas::matrix <double>& data_matrix,\
+		const int column, const int bins=10);
 	void get_data_from_csv(boost::numeric::ublas::matrix <double>& data_matrix,
 		const std::string& filepath, bool ignore_first_line=false,\
 		const bool clean_dataset=false, const bool OHE=false);

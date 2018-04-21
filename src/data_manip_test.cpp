@@ -15,7 +15,7 @@ int main()
 	int columns = X.size2();
 	std::cout << "After reading from csv...\n";
 	vz_learn::data_manip::print_head<double>(X);
-	Y = subrange(X, 0, X.size1(), X.size2() - 1, X.size2());
+	Y = subrange(X, 0, X.size1(), 6, 7);
 	std::cout << "Splitting into train, test, dev...\n";
 	vz_learn::data_manip::split_train_dev_test(X, Y, X_train, X_dev, X_test,\
 							Y_train, Y_dev, Y_test);
@@ -51,5 +51,14 @@ int main()
 	std::cout << "Testing Remove Column...\n";
 	vz_learn::data_manip::remove_column_from_matrix<double>(X, 0);
 	vz_learn::data_manip::print_head<double>(X);
+	std::cout << "Testing Column Discretization...\n";
+	vz_learn::data_manip::print_head<double>(Y);
+	std::vector bins = vz_learn::data_manip::discretize_feature(Y, 0);
+	for(auto bin:bins)
+	{
+		std::cout << bin << " ";
+	}
+	std::cout << "\n";
+	vz_learn::data_manip::print_head<double>(Y);
 	return 0;
 }
