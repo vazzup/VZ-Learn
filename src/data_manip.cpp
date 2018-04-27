@@ -131,7 +131,8 @@ namespace vz_learn::data_manip
 		}
 	}
 
-	std::vector<double> discretize_feature(boost::numeric::ublas::matrix <double>& data_matrix,\
+	std::vector<double> discretize_feature(\
+		boost::numeric::ublas::matrix <double>& data_matrix,\
 		const int column, const int bins)
 	{
 		/* **********************************
@@ -151,7 +152,6 @@ namespace vz_learn::data_manip
 		int bin = 1;
 		int i = 0;
 		int bin_size = std::ceil(((double)rows) / bins); // No of elements in 1st quantile
-		std::cout << bin_size << " " << rows << "\n";
 		while(bin <= bins && i < rows)
 		{
 			// For each row, check row number
@@ -244,7 +244,6 @@ namespace vz_learn::data_manip
 					if(null_)
 						continue;
 				}
-
 				add_row_to_matrix<std::string>(separated_strings, data_matrix_s, row_no);
 				++row_no;
 			}

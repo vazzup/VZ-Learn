@@ -62,6 +62,25 @@ namespace vz_learn::data_manip
 	void trim_string(std::string& line);
 
 	template <class T>
+	void add_column_to_matrix(const std::vector <T>& data_column,
+		boost::numeric::ublas::matrix <T>& data_matrix,
+		const int column_no)
+	{
+		/* **************************************
+		 * Function to Add Row to Matrix
+		 * *************************************/
+		int rows = data_matrix.size1();
+		int columns = data_matrix.size2();
+		data_matrix.resize(rows, columns + 1, true); // Add new row to matrix
+		for(int row=0; row<rows; row++)
+		{
+			// Copy all elements into matrix row
+			data_matrix(row, columns) = data_column[row];
+		}
+	}
+
+
+	template <class T>
 	void add_row_to_matrix(const std::vector <T>& data_row,
 		boost::numeric::ublas::matrix <T>& data_matrix,
 		const int row_no)
