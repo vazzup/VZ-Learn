@@ -47,8 +47,7 @@ namespace vz_learn::data_manip
 	void normalize_feature(boost::numeric::ublas::matrix <double>& data_matrix,\
 		const int column_no);
 	void one_hot_encode(boost::numeric::ublas::matrix <double>& data_matrix,\
-		int column_no,\
-		int threshold=0);
+		int column_no);
 	void random_initialization(boost::numeric::ublas::matrix <double>& data_matrix);
 	void split_train_dev_test(const boost::numeric::ublas::matrix <double>& X,\
 		boost::numeric::ublas::matrix <double>& Y,\
@@ -59,6 +58,10 @@ namespace vz_learn::data_manip
 		boost::numeric::ublas::matrix <double>& Y_dev,\
 		boost::numeric::ublas::matrix <double>& Y_test,\
 		const double train_ratio=0.6, const double dev_ratio=0.2);
+	void SVD(const boost::numeric::ublas::matrix <double>& data_matrix,\
+		boost::numeric::ublas::matrix <double>& U,\
+		boost::numeric::ublas::matrix <double>& S,\
+		boost::numeric::ublas::matrix <double>& V);
 	void trim_string(std::string& line);
 
 	template <class T>

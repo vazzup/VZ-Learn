@@ -21,13 +21,12 @@ namespace vz_learn::data_manip
 		{
 			return ST_T;
 		}
-		bool numeric = true, point = false;
+		bool numeric = true;
 		for(int i=0; i<len; i++)
 		{
 			if (s[i] == '.')
 			{
 				// Decimal is present
-				point = true;
 			}
 			else if(!(s[i] <='9' && s[i] >= '0'))
 			{
@@ -139,7 +138,7 @@ namespace vz_learn::data_manip
 		 * Discretize a column into bins
 		 * distributed equally across max and min
 		 * **********************************/
-		int rows = data_matrix.size1(), columns = data_matrix.size2();
+		int rows = (int)data_matrix.size1();
 		std::vector<double> bins_vector, values_vector;
 		bins_vector.resize(bins);
 		// Add all values  of the feature to the vector
@@ -224,7 +223,7 @@ namespace vz_learn::data_manip
 				trim_string(line); // Remove any extra whitespaces
 				boost::split(separated_strings, line,\
 					[](char c) { return c == ','; });// Split along commas
-				for(int i=0; i<separated_strings.size(); i++)
+				for(int i=0; i<(int)separated_strings.size(); i++)
 				{
 					trim_string(separated_strings[i]); // Trim separated strings
 				}
@@ -282,8 +281,7 @@ namespace vz_learn::data_manip
 	}
 
 	void one_hot_encode(boost::numeric::ublas::matrix <double> &data_matrix,\
-		int column_no,\
-		int threshold)
+		int column_no)
 	{
 		int rows, columns;
 		rows = data_matrix.size1();
@@ -421,6 +419,28 @@ namespace vz_learn::data_manip
 				add_row_to_matrix<double>(data_row_Y, Y_test, test_row++);
 			}
 		}
+	}
+
+	void SVD(const boost::numeric::ublas::matrix <double>& data_matrix,\
+		boost::numeric::ublas::matrix <double>& U,\
+		boost::numeric::ublas::matrix <double>& S,\
+		boost::numeric::ublas::matrix <double>& V)
+	{
+		/* **********************************************
+		 * Function to decompose a matrix - M (m x n) into
+		 * three matrices - U, S and V*
+		 * ----------------------
+		 * U (m x m) is a matrix whose columns are left singular vectors,
+		 * i.e. its columns are orthonomal eigenvectors for MM*
+		 * where M* is the conjugate transpose of M. U is a unitary matrix.
+		 * ----------------------
+		 * V (n x n) is a matrix whose rows are right singular vectors,
+		 * i.e. its columns are orthogonal eigenvectors for M*M
+		 * ----------------------
+		 *  S (m x n) or Sigma is the singular matrix whose diagonal
+		 *  entries are the square roots of the non zero eigenvalues of
+		 *  MM* and M*M
+		 * *********************************************/
 	}
 
 	void trim_string(std::string& word)
