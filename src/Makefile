@@ -19,6 +19,9 @@ $(BIN)naivebayes.o: naivebayes.cpp $(INCLUDE)naivebayes.hpp $(BIN)data_manip.o
 $(BIN)kmeans.o: kmeans.cpp $(INCLUDE)kmeans.hpp $(BIN)data_manip.o
 	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) -c kmeans.cpp $(BIN)data_manip.o -o $(BIN)kmeans.o
 
+$(BIN)decisiontree.o: decisiontree.cpp $(INCLUDE)decisiontree.hpp $(BIN)data_manip.o
+	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) -c decisiontree.cpp $(BIN)data_manip.o -o $(BIN)decisiontree.o
+
 $(BIN)data_manip_test: data_manip_test.cpp $(BIN)data_manip.o
 	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) data_manip_test.cpp $(BIN)data_manip.o -o $(BIN)data_manip_test
 
@@ -30,6 +33,9 @@ $(BIN)naive_bayes_test: naive_bayes_test.cpp $(BIN)naivebayes.o
 
 $(BIN)kmeans_test: kmeans_test.cpp $(BIN)kmeans.o
 	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) kmeans_test.cpp  $(BIN)kmeans.o $(BIN)data_manip.o -o $(BIN)kmeans_test
+
+$(BIN)decisiontree_test: decisiontree_test.cpp $(BIN)decisiontree.o
+	g++ $(CXXFLAGS) -I$(INCLUDE) -L$(LIBS) decisiontree_test.cpp  $(BIN)decisiontree.o $(BIN)data_manip.o -o $(BIN)decisiontree_test
 
 clean:
 	rm -rf ../bin/*
